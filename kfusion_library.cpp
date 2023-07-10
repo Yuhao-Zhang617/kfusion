@@ -63,7 +63,7 @@ inline std::ostream & operator<<(std::ostream & out, const float4 & m) {
     return out << ""  << m.x << "," << m.y << ","<< m.z << ","<< m.w << "" ;
 }
 
-
+uint3* _ptr = nullptr;
 template<> inline void  TypedParameter<float3>::copyValue(float3* to,const float3* from) {*(float3*)to = *(float3*)from;;};
 template<> inline void  TypedParameter<float3>::setValue(const char* otarg)                  {(*(float3*)_ptr)= atof3<float3>(otarg);};
 template<> inline const std::string  TypedParameter<float3>::getValue(const void * ptr) const  {
