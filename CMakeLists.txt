@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-
+set(appname kfusion)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O3                  -Wall -Wno-unknown-pragmas -Wextra -Wno-error=deprecated-declarations -Wno-error=array-bounds")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O3  --std=c++11 -Wall -Wno-unknown-pragmas -Wextra -Wno-error=deprecated-declarations -Wno-error=array-bounds ")
 
