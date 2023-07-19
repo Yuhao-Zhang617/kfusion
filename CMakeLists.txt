@@ -9,7 +9,18 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}   -Wno-error ")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error  ")
 ENDIF()
 
+# ------ Declare generate_slam_library function ------
+SET(SLAMBENCH_C_WRAPPER	-Wl,--whole-archive -L${WRAPPER_PATH} slambench-c-wrapper	-Wl,--no-whole-archive)
+SET(NULL_FILE_PATH	${WRAPPER_PATH}/null.cpp)
 
+function(generate_slam_library library_name )
+
+    add_library(${library_name}-library SHARED ${NULL_FILE_PATH})
+    target_link_libraries(${library_name}-library PRIVATE ${SLAMBENCH_C_WRAPPER} ${library_name})
+    SET_TARGET_PROPERTIES(${library_name}-library PROPERTIES LINK_FLAGS "${ARGN}")
+    install(TARGETS ${library_name}-library  DESTINATION  lib/)
+
+endfunction()
 
 
 
@@ -50,10 +61,9 @@ install(TARGETS ${appname}-openmp  DESTINATION  lib/)
 
  # ----------------- DYNAMIC  ----------------- 
  
-
-
 target_include_directories(${appname}-cpp  PRIVATE  ./cpp_headers )
 target_include_directories(${appname}-openmp  PRIVATE  ./cpp_headers )
+generate_slam_library(${appname}-cpp "")
 
 
  #  ----------------- OCL VERSION ----------------- 
@@ -70,7 +80,7 @@ if (OPENCL_FOUND)
     install(TARGETS ${appname}-opencl  DESTINATION  lib/)
  
 
-
+    generate_slam_library(${appname}-opencl "")
 
 ENDIF()
 
@@ -90,10 +100,10 @@ if (CUDA_FOUND)
 	cuda_add_library(${appname}-cuda    SHARED  ${kfusion_cuda_srcs}  kfusion_library.cpp OPTIONS -O3 -std=c++11 -Xcompiler -fPIC -D_MWAITXINTRIN_H_INCLUDED -D_FORCE_INLINES -I${CMAKE_CURRENT_SOURCE_DIR}/cuda_headers )
 	target_link_libraries(${appname}-cuda   ${common_libraries})	
 	target_include_directories(${appname}-cuda  PUBLIC ./cuda_headers )
-    install(TARGETS ${appname}-cuda  DESTINATION  lib/)
+    	install(TARGETS ${appname}-cuda  DESTINATION  lib/)
 
     
-
+	generate_slam_library(${appname}-cuda "")
 	
 endif(CUDA_FOUND)
 
